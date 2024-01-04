@@ -1,4 +1,6 @@
 import { Play } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+
 import {
   CountdownContainer,
   FormContainer,
@@ -8,29 +10,41 @@ import {
   StartCountdownButton,
   TaskInput,
 } from './styles'
-import { useState } from 'react'
 
 // controlled -> manter em tempo real a informação dentro de estados
 // uncontrolled -> busca informação apenas quando precisar
 
-export function Home() {
-  const [task, setTask] = useState('')
+/**
+ * function register(name: string)  {
+ *    return {
+ *      onChange: () => void,
+ *      onBlur: () => void,
+ *      onFocus: () => void
+ *    }
+ * }
+ */
 
-  function handleSubmit() {}
+export function Home() {
+  const { register, handleSubmit, watch } = useForm()
+
+  function handleCreateNewCycle(data: any) {
+    console.log(data)
+  }
+
+  const task = watch('task')
+  const isSubmitDisabled = !task
 
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit} action="">
+      <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
         <FormContainer>
           <label htmlFor="task">Vou trabalhar em</label>
           <TaskInput
             id="task"
-            name="task"
             type="text"
             placeholder="Dê um nome para o seu projeto"
             list="task-suggestions"
-            onChange={(event) => setTask(event.target.value)}
-            value={task}
+            {...register('task')}
           />
           <datalist id="task-suggestions">
             <option value="Projeto 1" />
@@ -44,6 +58,7 @@ export function Home() {
             type="number"
             placeholder="00"
             step={5}
+            {...register('minutesAmount', { valueAsNumber: true })}
           />
           <span>minutos.</span>
         </FormContainer>
@@ -56,7 +71,7 @@ export function Home() {
           <span>0</span>
         </CountdownContainer>
 
-        <StartCountdownButton type="submit" disabled={!task}>
+        <StartCountdownButton type="submit" disabled={isSubmitDisabled}>
           <Play size={24} />
           Começar
         </StartCountdownButton>
