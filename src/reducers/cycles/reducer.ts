@@ -1,6 +1,6 @@
 import { produce } from 'immer'
 
-import { ActionTypes } from './actions'
+import { Action, ActionTypes } from './actions'
 
 export interface Cycle {
   id: string
